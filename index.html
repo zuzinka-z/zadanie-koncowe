@@ -31,8 +31,10 @@
             padding: 10px 20px;
             font-size: 1em;
             margin-top: 10px;
-            background-color: pink;
+            background-color: rgb(255, 206, 214);
+            border: 2px solid;
             border-color: palevioletred;
+            border-radius: 10%;
             font-family: Georgia, 'Times New Roman', Times, serif;
         }
 
@@ -51,11 +53,20 @@
             margin-top: 15px;
             font-family: Georgia, 'Times New Roman', Times, serif;
         }
+
+        #instruction {
+            font-size: 1.5em;
+            color: rgb(89, 10, 113);
+            text-align: center;
+            margin-top: 15px;
+            font-family: Georgia, 'Times New Roman', Times, serif;
+        }
     </style>
 </head>
 
 <body>
     <h1 id="title">CONNECTIONS</h1>
+    <div id="instruction">create four groups of four</div>
     <div id="mistakes">mistakes: 0/4</div>
     <div id="squares"></div>
     <button id="submit">SUBMIT</button>
@@ -86,7 +97,7 @@
                 const square = document.createElement('div');
                 square.innerText = word;
 
-                square.style.height = '70px';
+                square.style.height = '50px';
                 square.style.width = '70px';
                 square.style.padding = '10px';
                 square.style.backgroundColor = "hsl(240, 67%, 94%)";

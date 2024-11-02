@@ -36,9 +36,17 @@
             font-family: Georgia, 'Times New Roman', Times, serif;
         }
 
-        #message {
+        #mistakes {
             font-size: 1.5em;
             color: red;
+            text-align: center;
+            margin-top: 15px;
+            font-family: Georgia, 'Times New Roman', Times, serif;
+        }
+
+        #message {
+            font-size: 1.5em;
+            color: rgb(89, 10, 113);
             text-align: center;
             margin-top: 15px;
             font-family: Georgia, 'Times New Roman', Times, serif;
@@ -48,6 +56,7 @@
 
 <body>
     <h1 id="title">CONNECTIONS</h1>
+    <div id="mistakes">mistakes: 0/4</div>
     <div id="squares"></div>
     <button id="submit">SUBMIT</button>
     <div id="message"></div>
@@ -81,7 +90,7 @@
                 square.style.width = '70px';
                 square.style.padding = '10px';
                 square.style.backgroundColor = "hsl(240, 67%, 94%)";
-                square.style.border = '2px';
+                square.style.border = '2px solid';
                 square.style.borderRadius = '10%';
                 square.style.borderColor = "hsl(270, 87%, 53%)";
 
@@ -107,19 +116,22 @@
                 });
                 square.style.backgroundColor = "hsl(240, 67%, 94%)";
                 square.style.color = 'rgb(30, 30, 30)';
+                square.style.border = '2px solid';
+                square.style.borderColor = "hsl(270, 87%, 53%)";
                 square.innerText = word;
+
             } else {
                 if (selectedWords.length < 4) {
                     selectedWords.push(word);
                     square.style.backgroundColor = "hsl(0, 0%, 50%)";
                     square.style.color = "hsl(180, 0%, 100%)";
+                    square.style.border = "2px solid black";
                 }
             }
         }
 
         function checkSelectedWords() {
             let correctGroupFound = false;
-            let oneAway = false; 
             for (let i = 0; i < correctGroups.length; i++) {
                 const group = correctGroups[i];
                 if (group.words.every(function (word) {
@@ -138,7 +150,8 @@
                     document.getElementbyId('message').innerText = "game over!"
                 }
                 else {
-                    document.getElementById('message').innerText = "mistakes: " + mistakes + "/" + maksMistakes;
+                    document.getElementById('mistakes').innerText = "mistakes: " + mistakes + "/" + maksMistakes;
+                    document.getElementById('square')
                 }
                 resetSelections();
             }
@@ -153,6 +166,7 @@
                     square.style.backgroundColor = group.color;
                     square.innerText = group.category + ': ' + square.innerText;
                     square.style.color = 'white';
+                    square.style.border = '2px solid white';
                 }
             };
             document.getElementById('message').innerText = "correct! you found the " + group.category + " group.";
@@ -160,8 +174,11 @@
 
             if (correctGroupsFound == correctGroups.length) {
                 const messageWin = document.getElementById('message');
-                messageWin.innerText = "you won!";
+                messageWin.innerText = "YOU WON!";
+                messageWin.style.color = "hsl(287, 100%, 22%)";
+                messageWin.style.fontSize = '4em';
             }
+
         }
 
         function resetSelections() {
@@ -171,6 +188,8 @@
                 if (!square.style.pointerEvents) {
                     square.style.backgroundColor = "hsl(240, 67%, 94%)";
                     square.style.color = 'rgb(30, 30, 30)';
+                    square.style.border = '2px solid';
+                    square.style.borderColor = "hsl(270, 87%, 53%)";
                 }
             };
         }

@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Connections</title>
+    <style>
+        body {
+            background-color: rgb(255, 255, 255);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #title {
+            font-size: 10ex;
+            font-family: Georgia, 'Times New Roman', Times, serif;
+            color: rgb(89, 10, 113);
+            text-align: center;
+        }
+
+        #squares {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            width: 320px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        #submit {
+            padding: 10px 20px;
+            font-size: 1em;
+            margin-top: 10px;
+            background-color: pink;
+            border-color: palevioletred;
+            font-family: Georgia, 'Times New Roman', Times, serif;
+        }
+
+        #message {
+            font-size: 1em;
+            color: red;
+            text-align: center;
+            margin-top: 15px;
+            font-family: Georgia, 'Times New Roman', Times, serif;
+        }
+    </style>
+</head>
+
+<body>
+    <h1 id="title">CONNECTIONS</h1>
+    <div id="squares"></div>
+    <button id="submit">SUBMIT</button>
+    <div id="message"></div>
+    <script>
+        const words = [
+            'hellbender', 'periwinkle', 'blobfish', 'durian',
+            'jordan', 'pitaya', 'cera', 'mahogany',
+            'indigo', 'rambutan', 'booby', 'amaranth',
+            'dikdik', 'keaton', 'persimmon', 'jackson'
+        ];
+
+        const correctGroups = [
+            { words: ['jordan', 'jackson', 'keaton', 'cera'], category: "Micheal _", color: "#ADD8E6" },
+            { words: ['durian', 'rambutan', 'persimmon', 'pitaya'], category: "fruits", color: "#46E3AA" },
+            { words: ['indigo', 'periwinkle', 'mahogany', 'amaranth'], category: "colors", color: "#FFC66B" },
+            { words: ['dikdik', 'blobfish', 'booby', 'hellbender'], category: "animals", color: "#FF78A3" }
+        ];
+
+        let selectedWords = [];
+        let correctGroupsFound = 0;
+
+        function rysuj() {
+            const squaresDiv = document.getElementById('squares');
+            words.forEach(function (word) {
+                const square = document.createElement('div');
+                square.innerText = word;
+
+                square.style.height = '70px';
+                square.style.width = '70px';
+                square.style.padding = '10px';
+                square.style.backgroundColor = "hsl(240, 67%, 94%)";
+                square.style.borderRadius = '10%';
+                square.style.textAlign = 'center';
+                square.style.display = 'flex';
+                square.style.alignItems = 'center';
+                square.style.justifyContent = 'center';
+                square.style.fontSize = '1em';
+                square.style.color = 'rgb(30, 30, 30)';
+                square.className = 'square'
+
+                square.addEventListener('click', function () {
+                    selectWord(square, word);
+                });
+                squaresDiv.appendChild(square);
+            });
+        }
+
+        function selectWord(square, word) {
+            if (selectedWords.includes(word)) {
+                selectedWords = selectedWords.filter(function (w) {
+                    return w !== word;
+                });
+                square.style.backgroundColor = "hsl(240, 67%, 94%)";
+                square.style.color = 'rgb(30, 30, 30)';
+                square.innerText = word;
+            } else {
+                if (selectedWords.length < 4) {
+                    selectedWords.push(word);
+                    square.style.backgroundColor = "hsl(0, 0%, 50%)";
+                    square.style.color = "hsl(180, 0%, 100%)";
+                }
+            }
+        }
+
+        function checkSelectedWords() {
+            let correctGroupFound = false;
+            for (let i = 0; i < correctGroups.length; i++) {
+                const group = correctGroups[i];
+                if (group.words.every(function (word) {
+                    return selectedWords.includes(word);
+                })) {
+                    correctGroupFound = true;
+                    markCorrectGroup(group);
+                    selectedWords = [];
+                    break;
+                }
+            }
+            if (!correctGroupFound) {
+                selectedWords = [];
+                document.getElementById('message').innerText = "Incorrect selection. Please try again.";
+                resetSelections();
+            }
+        }
+
+        function markCorrectGroup(group) {
+            const squares = document.getElementsByClassName('square');
+            for (let i = 0; i < squares.length; i++) {
+                const square = squares[i];
+                if (group.words.includes(square.innerText)) {
+                    square.style.pointerEvents = 'none'; 
+                    square.style.backgroundColor = group.color; 
+                }
+            };
+            document.getElementById('message').innerText = "Correct! You found the " + group.category + " group.";
+            correctGroupsFound += 1;
+
+            if (correctGroupsFound == correctGroups.length) {
+                document.getElementById('message').innerText = "Congratulations! You've found all groups!";
+            }
+        }
+
+        function resetSelections() {
+            const squares = document.getElementsByClassName('square');
+            for (let i = 0; i < squares.length; i++) {
+                const square = squares[i];
+                square.style.backgroundColor = "hsl(240, 67%, 94%)";
+                square.style.color = 'rgb(30, 30, 30)';
+            };
+        }
+
+        document.getElementById('submit').addEventListener('click', function () {
+            if (selectedWords.length == 4) {
+                checkSelectedWords();
+            } else {
+                document.getElementById('message').innerText = "Please select 4 words before submitting.";
+            }
+        });
+
+        rysuj();
+    </script>
+</body>
+
+</html>

@@ -5,7 +5,7 @@
     <title>Connections</title>
     <style>
         body {
-            background-color: rgb(255, 255, 255);
+            background-color: rgb(254, 232, 246);
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -37,7 +37,7 @@
         }
 
         #message {
-            font-size: 1em;
+            font-size: 1.5em;
             color: red;
             text-align: center;
             margin-top: 15px;
@@ -68,6 +68,8 @@
 
         let selectedWords = [];
         let correctGroupsFound = 0;
+        let mistakes = 0;
+        const maksMistakes = 4;
 
         function rysuj() {
             const squaresDiv = document.getElementById('squares');
@@ -79,7 +81,10 @@
                 square.style.width = '70px';
                 square.style.padding = '10px';
                 square.style.backgroundColor = "hsl(240, 67%, 94%)";
+                square.style.border = '2px';
                 square.style.borderRadius = '10%';
+                square.style.borderColor = "hsl(270, 87%, 53%)";
+
                 square.style.textAlign = 'center';
                 square.style.display = 'flex';
                 square.style.alignItems = 'center';
@@ -114,6 +119,7 @@
 
         function checkSelectedWords() {
             let correctGroupFound = false;
+            let oneAway = false; 
             for (let i = 0; i < correctGroups.length; i++) {
                 const group = correctGroups[i];
                 if (group.words.every(function (word) {
@@ -126,8 +132,14 @@
                 }
             }
             if (!correctGroupFound) {
+                mistakes += 1;
                 selectedWords = [];
-                document.getElementById('message').innerText = "Incorrect selection. Please try again.";
+                if (mistakes >= maksMistakes) {
+                    document.getElementbyId('message').innerText = "game over!"
+                }
+                else {
+                    document.getElementById('message').innerText = "mistakes: " + mistakes + "/" + maksMistakes;
+                }
                 resetSelections();
             }
         }
@@ -137,15 +149,18 @@
             for (let i = 0; i < squares.length; i++) {
                 const square = squares[i];
                 if (group.words.includes(square.innerText)) {
-                    square.style.pointerEvents = 'none'; 
-                    square.style.backgroundColor = group.color; 
+                    square.style.pointerEvents = 'none';
+                    square.style.backgroundColor = group.color;
+                    square.innerText = group.category + ': ' + square.innerText;
+                    square.style.color = 'white';
                 }
             };
-            document.getElementById('message').innerText = "Correct! You found the " + group.category + " group.";
+            document.getElementById('message').innerText = "correct! you found the " + group.category + " group.";
             correctGroupsFound += 1;
 
             if (correctGroupsFound == correctGroups.length) {
-                document.getElementById('message').innerText = "Congratulations! You've found all groups!";
+                const messageWin = document.getElementById('message');
+                messageWin.innerText = "you won!";
             }
         }
 
@@ -153,8 +168,10 @@
             const squares = document.getElementsByClassName('square');
             for (let i = 0; i < squares.length; i++) {
                 const square = squares[i];
-                square.style.backgroundColor = "hsl(240, 67%, 94%)";
-                square.style.color = 'rgb(30, 30, 30)';
+                if (!square.style.pointerEvents) {
+                    square.style.backgroundColor = "hsl(240, 67%, 94%)";
+                    square.style.color = 'rgb(30, 30, 30)';
+                }
             };
         }
 
@@ -162,7 +179,7 @@
             if (selectedWords.length == 4) {
                 checkSelectedWords();
             } else {
-                document.getElementById('message').innerText = "Please select 4 words before submitting.";
+                document.getElementById('message').innerText = "please select 4 words";
             }
         });
 
